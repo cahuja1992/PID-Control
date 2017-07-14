@@ -1,10 +1,8 @@
 #ifndef PID_H
 #define PID_H
-#include <vector>
 
 class PID {
 public:
-
   /*
   * Errors
   */
@@ -20,6 +18,12 @@ public:
   double Kd;
 
   /*
+  * Custom
+  */
+  double sum_cte;
+  double prev_cte;
+  
+  /*
   * Constructor
   */
   PID();
@@ -32,7 +36,7 @@ public:
   /*
   * Initialize PID.
   */
-  void Init(double Kp, double Ki, double Kd,const char* type);
+  void Init(double Kp, double Ki, double Kd);
 
   /*
   * Update the PID error variables given cross track error.
@@ -43,11 +47,6 @@ public:
   * Calculate the total PID error.
   */
   double TotalError();
-
-  /*twiddle*/
-  /*DEPRICATED*/
-  void Twiddle();
-
 };
 
 #endif /* PID_H */

@@ -1,7 +1,4 @@
 #include "PID.h"
-#include <iostream>
-#include <vector>
-#include <limits>
 
 using namespace std;
 
@@ -13,35 +10,32 @@ PID::PID() {}
 
 PID::~PID() {}
 
-void PID::Init(double kp, double ki, double kd,const char* type) {
-
-  //initialize PID Controller with coefficients
-  //and set error
-  Kp = kp;
-  Ki = ki;
-  Kd = kd;
-  p_error = 0;
-  i_error = 0;
-  d_error = 0;
-
-  cout << "Initializing " << type << " PID Controller with" << endl;
-  cout << " P:" << Kp << endl;
-  cout << " I:" << Ki << endl;
-  cout << " D:" << Kd << endl;
-  cout << "and 0 Error" << endl;
-
+void PID::Init(double Kp, double Ki, double Kd) {
+    // P: steer in proportion to the crosstrack error
+    
+    // I: steer more when there is sustained error to counter the systematic bias we have from e.g. misaligned wheels.
+    
+    // D: When the car has turned enough to reduce CTE, it counter-steers
+    // to avoid overshooting
+    
+    // Twiddle: choose optimal parameters
+    this->Kp = Kp;
+    this->Ki = Ki;
+    this->Kd = Kd;
+    sum_cte = 0;
+    prev_cte = 0;
 }
 
 void PID::UpdateError(double cte) {
-    d_error = cte - p_error;
-    p_error = cte;
-    i_error += cte;
+    sum_cte += cte;
+    p_error = - Kp * cte;
+    i_error = - Ki * sum_cte;
+    d_error = - Kd * (cte - prev_cte);
+    prev_cte = cte;
+    //std::cout << "updated error" << std::endl;
 }
 
 double PID::TotalError() {
-  return (Kp*p_error + Ki*i_error + Kd*d_error)*-1;
+  return p_error + i_error + d_error;
 }
 
-/*DEPRICATED*/
-void PID::Twiddle(){
-}

@@ -1,0 +1,82 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Chirag/Desktop/self-driving-car-nd-master (1)/self-driving-car-nd-master/term-2/p4-pid-control/src/PID.cpp
+PID.h
+C:/Users/Chirag/Desktop/self-driving-car-nd-master (1)/self-driving-car-nd-master/term-2/p4-pid-control/src/PID.h
+
+C:/Users/Chirag/Desktop/self-driving-car-nd-master (1)/self-driving-car-nd-master/term-2/p4-pid-control/src/PID.h
+
+C:/Users/Chirag/Desktop/self-driving-car-nd-master (1)/self-driving-car-nd-master/term-2/p4-pid-control/src/json.hpp
+algorithm
+-
+array
+-
+cassert
+-
+cctype
+-
+ciso646
+-
+cmath
+-
+cstddef
+-
+cstdint
+-
+cstdlib
+-
+cstring
+-
+forward_list
+-
+functional
+-
+initializer_list
+-
+iomanip
+-
+iostream
+-
+iterator
+-
+limits
+-
+locale
+-
+map
+-
+memory
+-
+numeric
+-
+sstream
+-
+stdexcept
+-
+string
+-
+type_traits
+-
+utility
+-
+vector
+-
+
+C:/Users/Chirag/Desktop/self-driving-car-nd-master (1)/self-driving-car-nd-master/term-2/p4-pid-control/src/main.cpp
+uWS/uWS.h
+-
+iostream
+-
+json.hpp
+C:/Users/Chirag/Desktop/self-driving-car-nd-master (1)/self-driving-car-nd-master/term-2/p4-pid-control/src/json.hpp
+PID.h
+C:/Users/Chirag/Desktop/self-driving-car-nd-master (1)/self-driving-car-nd-master/term-2/p4-pid-control/src/PID.h
+math.h
+-
+
