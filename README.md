@@ -1,92 +1,134 @@
-# CarND-Controls-PID
-Self-Driving Car Engineer Nanodegree Program
+# Overview
+This repository contains all the code needed to complete the final project for the Localization course in Udacity's Self-Driving Car Nanodegree.
 
----
+#### Submission
+All you will submit is your completed version of `particle_filter.cpp`, which is located in the `src` directory. You should probably do a `git pull` before submitting to verify that your project passes the most up-to-date version of the grading code (there are some parameters in `src/main.cpp` which govern the requirements on accuracy and run time.)
 
-## Dependencies
+## Project Introduction
+Your robot has been kidnapped and transported to a new location! Luckily it has a map of this location, a (noisy) GPS estimate of its initial location, and lots of (noisy) sensor and control data.
 
-* cmake >= 3.5
- * All OSes: [click here for installation instructions](https://cmake.org/install/)
-* make >= 4.1
-  * Linux: make is installed by default on most Linux distros
-  * Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
-  * Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
-* gcc/g++ >= 5.4
-  * Linux: gcc / g++ is installed by default on most Linux distros
-  * Mac: same deal as make - [install Xcode command line tools]((https://developer.apple.com/xcode/features/)
-  * Windows: recommend using [MinGW](http://www.mingw.org/)
-* [uWebSockets](https://github.com/uWebSockets/uWebSockets)
-  * Run either `./install-mac.sh` or `./install-ubuntu.sh`.
-  * If you install from source, checkout to commit `e94b6e1`, i.e.
-    ```
-    git clone https://github.com/uWebSockets/uWebSockets 
-    cd uWebSockets
-    git checkout e94b6e1
-    ```
-    Some function signatures have changed in v0.14.x. See [this PR](https://github.com/udacity/CarND-MPC-Project/pull/3) for more details.
-* Simulator. You can download these from the [project intro page](https://github.com/udacity/self-driving-car-sim/releases) in the classroom.
+In this project you will implement a 2 dimensional particle filter in C++. Your particle filter will be given a map and some initial localization information (analogous to what a GPS would provide). At each time step your filter will also get observation and control data. 
 
-There's an experimental patch for windows in this [PR](https://github.com/udacity/CarND-PID-Control-Project/pull/3)
+## Running the Code
+This project involves the Term 2 Simulator which can be downloaded [here](https://github.com/udacity/self-driving-car-sim/releases)
 
-## Basic Build Instructions
+This repository includes two files that can be used to set up and intall uWebSocketIO for either Linux or Mac systems. For windows you can use either Docker, VMware, or even Windows 10 Bash on Ubuntu to install uWebSocketIO.
 
-1. Clone this repo.
-2. Make a build directory: `mkdir build && cd build`
-3. Compile: `cmake .. && make`
-4. Run it: `./pid`. 
+Once the install for uWebSocketIO is complete, the main program can be built and ran by doing the following from the project top directory.
 
-## Editor Settings
+mkdir build
+cd build
+cmake ..
+make
+./particle_filter
 
-We've purposefully kept editor configuration files out of this repo in order to
-keep it as simple and environment agnostic as possible. However, we recommend
-using the following settings:
+Note that the programs that need to be written to accomplish the project are src/particle_filter.cpp, and particle_filter.h
 
-* indent using spaces
-* set tab width to 2 spaces (keeps the matrices in source code aligned)
+The program main.cpp has already been filled out, but feel free to modify it.
 
-## Code Style
+Here is the main protcol that main.cpp uses for uWebSocketIO in communicating with the simulator.
 
-Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
+INPUT: values provided by the simulator to the c++ program
 
-## Project Instructions and Rubric
+// sense noisy position data from the simulator
 
-Note: regardless of the changes you make, your project must be buildable using
-cmake and make!
+["sense_x"] 
 
-More information is only accessible by people who are already enrolled in Term 2
-of CarND. If you are enrolled, see [the project page](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/f1820894-8322-4bb3-81aa-b26b3c6dcbaf/lessons/e8235395-22dd-4b87-88e0-d108c5e5bbf4/concepts/6a4d8d42-6a04-4aa6-b284-1697c0fd6562)
-for instructions and the project rubric.
+["sense_y"] 
 
-## Hints!
+["sense_theta"] 
 
-* You don't have to follow this directory structure, but if you do, your work
-  will span all of the .cpp files here. Keep an eye out for TODOs.
+// get the previous velocity and yaw rate to predict the particle's transitioned state
 
-## Call for IDE Profiles Pull Requests
+["previous_velocity"]
 
-Help your fellow students!
+["previous_yawrate"]
 
-We decided to create Makefiles with cmake to keep this project as platform
-agnostic as possible. Similarly, we omitted IDE profiles in order to we ensure
-that students don't feel pressured to use one IDE or another.
+// receive noisy observation data from the simulator, in a respective list of x/y values
 
-However! I'd love to help people get up and running with their IDEs of choice.
-If you've created a profile for an IDE that you think other students would
-appreciate, we'd love to have you add the requisite profile files and
-instructions to ide_profiles/. For example if you wanted to add a VS Code
-profile, you'd add:
+["sense_observations_x"] 
 
-* /ide_profiles/vscode/.vscode
-* /ide_profiles/vscode/README.md
+["sense_observations_y"] 
 
-The README should explain what the profile does, how to take advantage of it,
-and how to install it.
 
-Frankly, I've never been involved in a project with multiple IDE profiles
-before. I believe the best way to handle this would be to keep them out of the
-repo root to avoid clutter. My expectation is that most profiles will include
-instructions to copy files to a new location to get picked up by the IDE, but
-that's just a guess.
+OUTPUT: values provided by the c++ program to the simulator
 
-One last note here: regardless of the IDE used, every submitted project must
-still be compilable with cmake and make./
+// best particle values used for calculating the error evaluation
+
+["best_particle_x"]
+
+["best_particle_y"]
+
+["best_particle_theta"] 
+
+//Optional message data used for debugging particle's sensing and associations
+
+// for respective (x,y) sensed positions ID label 
+
+["best_particle_associations"]
+
+// for respective (x,y) sensed positions
+
+["best_particle_sense_x"] <= list of sensed x positions
+
+["best_particle_sense_y"] <= list of sensed y positions
+
+
+Your job is to build out the methods in `particle_filter.cpp` until the simulator output says:
+
+```
+Success! Your particle filter passed!
+```
+
+# Implementing the Particle Filter
+The directory structure of this repository is as follows:
+
+```
+root
+|   build.sh
+|   clean.sh
+|   CMakeLists.txt
+|   README.md
+|   run.sh
+|
+|___data
+|   |   
+|   |   map_data.txt
+|   
+|   
+|___src
+    |   helper_functions.h
+    |   main.cpp
+    |   map.h
+    |   particle_filter.cpp
+    |   particle_filter.h
+```
+
+The only file you should modify is `particle_filter.cpp` in the `src` directory. The file contains the scaffolding of a `ParticleFilter` class and some associated methods. Read through the code, the comments, and the header file `particle_filter.h` to get a sense for what this code is expected to do.
+
+If you are interested, take a look at `src/main.cpp` as well. This file contains the code that will actually be running your particle filter and calling the associated methods.
+
+## Inputs to the Particle Filter
+You can find the inputs to the particle filter in the `data` directory. 
+
+#### The Map*
+`map_data.txt` includes the position of landmarks (in meters) on an arbitrary Cartesian coordinate system. Each row has three columns
+1. x position
+2. y position
+3. landmark id
+
+### All other data the simulator provides, such as observations and controls.
+
+> * Map data provided by 3D Mapping Solutions GmbH.
+
+## Success Criteria
+If your particle filter passes the current grading code in the simulator (you can make sure you have the current version at any time by doing a `git pull`), then you should pass! 
+
+The things the grading code is looking for are:
+
+
+1. **Accuracy**: your particle filter should localize vehicle position and yaw to within the values specified in the parameters `max_translation_error` and `max_yaw_error` in `src/main.cpp`.
+
+2. **Performance**: your particle filter should complete execution within the time of 100 seconds.
+
+
